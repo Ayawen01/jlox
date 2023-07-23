@@ -56,10 +56,19 @@ class Scanner {
     return this.current >= this.source.length;
   }
 
+  /**
+   * 推进
+   * @returns {String}
+   */
   advance() {
     return this.source[this.current++];
   }
 
+  /**
+   * 添加token
+   * @param {TokenType} type 
+   * @param {Object} literal 
+   */
   addToken(type, literal = null) {
     const text = this.source.slice(this.start, this.current);
     this.tokens.push(new Token(
