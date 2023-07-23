@@ -55,6 +55,20 @@ class Scanner {
   isAtEnd() {
     return this.current >= this.source.length;
   }
+
+  advance() {
+    return this.source[this.current++];
+  }
+
+  addToken(type, literal = null) {
+    const text = this.source.slice(this.start, this.current);
+    this.tokens.push(new Token(
+      type,
+      text,
+      literal,
+      this.line
+    ));
+  }
 }
 
 export default Scanner;

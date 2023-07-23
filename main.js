@@ -19,7 +19,7 @@ function main () {
  */
 function runPrompt () {
   while (true) {
-    const code = prompt('> ');
+    const code = prompt('>>>');
     run(code);
     hadError = false;
   }
@@ -43,7 +43,7 @@ function run (source) {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
 
-  tokens.foreach(token => console.log(token));
+  tokens.forEach(token => console.log(token));
 }
 
 /**
