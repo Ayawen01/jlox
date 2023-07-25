@@ -1,5 +1,6 @@
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
+import { error, report } from "./error.js";
 
 class Scanner {
   /**
@@ -19,7 +20,7 @@ class Scanner {
   /**
    * @returns {Array<Token>}
    */
-  scanTokens() {
+  scanTokens () {
     while (!this.isAtEnd()) {
       this.start = this.current;
       this.scanToken();
@@ -32,7 +33,7 @@ class Scanner {
   /**
    * @returns {Token}
    */
-  scanToken() {
+  scanToken () {
     const c = this.advance();
     switch (c) {
       case '(': this.addToken(TokenType.LEFT_PAREN); break;
@@ -45,14 +46,39 @@ class Scanner {
       case '+': this.addToken(TokenType.PLUS); break;
       case ';': this.addToken(TokenType.SEMICOLON); break;
       case '*': this.addToken(TokenType.STAR); break;
+      case '!': this.addToken(
+        this.match('=') ? TokenType.BANG_EQUAL : TokenType.BANG
+      ); break;
+      case '=': this.addToken(
+        this.match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL
+      ); break;
+      case '>': this.addToken(
+        this.match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER
+      ); break;
+      case '<': this.addToken(
+        this.match('=') ? TokenType.LESS_EQUAL : TokenType.LESS
+      ); break;
+      default: error(this.line, 'Unexpected character.'); break;
     }
+  }
+
+  /**
+   * 匹配当前字符跟expected是否相等
+   * @param {String} expected 
+   * @returns {Boolean}
+   */
+  match (expected) {
+    if (this.isAtEnd()) return false;
+    if (this.source[this.current] !== expected) return false;
+    this.current++;
+    return true;
   }
 
   /**
    * 辅助函数，用来告诉我们是否已消费完所有字符。
    * @returns {Boolean}
    */
-  isAtEnd() {
+  isAtEnd () {
     return this.current >= this.source.length;
   }
 
@@ -60,7 +86,7 @@ class Scanner {
    * 推进
    * @returns {String}
    */
-  advance() {
+  advance () {
     return this.source[this.current++];
   }
 
@@ -69,7 +95,7 @@ class Scanner {
    * @param {TokenType} type 
    * @param {Object} literal 
    */
-  addToken(type, literal = null) {
+  addToken (type, literal = null) {
     const text = this.source.slice(this.start, this.current);
     this.tokens.push(new Token(
       type,

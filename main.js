@@ -30,8 +30,12 @@ function runPrompt () {
  * @param {String} path 
  */
 function runFile (path) {
-  const source = Deno.readTextFileSync(path);
-  run(source);
+  try {
+    const source = Deno.readTextFileSync(path);
+    run(source);
+  } catch (err) {
+    console.error(err.message);
+  }
   if (hadError) Deno.exit(65);
 }
 
@@ -44,25 +48,6 @@ function run (source) {
   const tokens = scanner.scanTokens();
 
   tokens.forEach(token => console.log(token));
-}
-
-/**
- * 
- * @param {Number} line 
- * @param {String} message 
- */
-function error (line, message) {
-  report(line, '', message);
-}
-
-/**
- * 
- * @param {Number} line 
- * @param {String} where 
- * @param {String} message 
- */
-function report (line, where, message) {
-  console.error(`[line ${line}] Error ${where}: ${message}`);
 }
 
 main();
