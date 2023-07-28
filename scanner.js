@@ -58,6 +58,20 @@ class Scanner {
       case '<': this.addToken(
         this.match('=') ? TokenType.LESS_EQUAL : TokenType.LESS
       ); break;
+      case '/':
+        if (this.match('/')) {
+          while (this.peek() !== '\n' && !this.isAtEnd()) this.advance();
+        } else {
+          this.addToken(TokenType.SLASH);
+        }
+        break;
+      case ' ':
+      case '\r':
+      case '\t':
+        break;
+      case '\n':
+        this.line++;
+        break;
       default: error(this.line, 'Unexpected character.'); break;
     }
   }
@@ -72,6 +86,15 @@ class Scanner {
     if (this.source[this.current] !== expected) return false;
     this.current++;
     return true;
+  }
+
+  /**
+   * 前瞻
+   * @returns {String}
+   */
+  peek () {
+    if (this.isAtEnd()) return '\0';
+    return this.source[this.current];
   }
 
   /**
