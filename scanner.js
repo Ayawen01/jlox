@@ -1,6 +1,26 @@
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
-import { error, report } from "./error.js";
+import { error } from "./error.js";
+
+// 关键字
+const keywords = new Map([
+  ["and",     TokenType.AND],
+  ["class",   TokenType.CLASS],
+  ["else",    TokenType.ELSE],
+  ["false",   TokenType.FALSE],
+  ["for",     TokenType.FOR],
+  ["fun",     TokenType.FUN],
+  ["if",      TokenType.IF],
+  ["nil",     TokenType.NIL],
+  ["or",      TokenType.OR],
+  ["print",   TokenType.PRINT],
+  ["return",  TokenType.RETURN],
+  ["super",   TokenType.SUPER],
+  ["this",    TokenType.THIS],
+  ["true",    TokenType.TRUE],
+  ["var",     TokenType.VAR],
+  ["while",   TokenType.WHILE],
+]);
 
 class Scanner {
   /**
@@ -76,10 +96,25 @@ class Scanner {
       default:
         if (this.isDigit(c)) {
           this.number();
+        } else if (this.isAlpha(c)) {
+          this.identifier();
         } else {
           error(this.line, 'Unexpected character.');
         }
     }
+  }
+
+  /**
+   * 处理关键字和标识符
+   * @returns {void}
+   */
+  identifier () {
+    while (this.isAlphaNumeric(this.peek())) this.advance();
+
+    const text = this.source.slice(this.start, this.current);
+    const type = keywords.get(text) ?? TokenType.IDENTIFIER;
+
+    this.addToken(type);
   }
 
   /**
@@ -152,7 +187,27 @@ class Scanner {
   }
 
   /**
-   * 判断是否是数字
+   * 判断是否为字母
+   * @param {String} c 
+   * @returns {Boolean}
+   */
+  isAlpha (c) {
+    return (c >= 'a' && c <= 'z') ||
+      (c >= 'A' && c <= 'Z') ||
+      c == '_';
+  }
+
+  /**
+   * 判断是否为字符或数字
+   * @param {String} c
+   * @returns {Boolean}
+   */
+  isAlphaNumeric (c) {
+    return this.isAlpha(c) || this.isDigit(c);
+  }
+
+  /**
+   * 判断是否为数字
    * @param {String} c 
    * @returns {Boolean}
    */
