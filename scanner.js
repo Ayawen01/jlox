@@ -72,8 +72,52 @@ class Scanner {
       case '\n':
         this.line++;
         break;
-      default: error(this.line, 'Unexpected character.'); break;
+      case '"': this.string(); break;
+      default:
+        if (this.isDigit(c)) {
+          this.number();
+        } else {
+          error(this.line, 'Unexpected character.');
+        }
     }
+  }
+
+  /**
+   * 处理数字字面量
+   * @returns {void}
+   */
+  number () {
+    while (this.isDigit(this.peek()) && !this.isAtEnd()) this.advance();
+
+    if (this.peek() === '.' && this.isDigit(this.peekNext())) {
+      this.advance();
+      while (this.isDigit(this.peek())) this.advance();
+    }
+
+    const number = Number(this.source.slice(this.start, this.current));
+
+    this.addToken(TokenType.NUMBER, number);
+  }
+
+  /**
+   * 处理字符串字面量
+   * @returns {void} 
+   */
+  string () {
+    while (this.peek() !== '"' && !this.isAtEnd()) {
+      if (this.peek() === '\n') this.line++;
+      this.advance();
+    }
+
+    if (this.isAtEnd()) {
+      error(this.line, "Unterminated string.");
+      return;
+    }
+
+    this.advance();
+
+    const value = this.source.slice(this.start + 1, this.current - 1);
+    this.addToken(TokenType.STRING, value);
   }
 
   /**
@@ -89,12 +133,31 @@ class Scanner {
   }
 
   /**
-   * 前瞻
+   * 返回当前字符
    * @returns {String}
    */
   peek () {
     if (this.isAtEnd()) return '\0';
     return this.source[this.current];
+  }
+
+  /**
+   * 返回下一个字符
+   * @returns {String}
+   */
+  peekNext () {
+    const current = this.current + 1;
+    if (current >= this.source.length) return '\0';
+    return this.source[current];
+  }
+
+  /**
+   * 判断是否是数字
+   * @param {String} c 
+   * @returns {Boolean}
+   */
+  isDigit (c) {
+    return c >= '0' && c <= '9';
   }
 
   /**
