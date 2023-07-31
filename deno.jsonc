@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "dev": "deno run --allow-read main.js"
+    "dev": "deno run --allow-read src/main.js"
   }
 }

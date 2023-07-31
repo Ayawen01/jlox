@@ -1,25 +1,25 @@
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
-import { error } from "./error.js";
+import Error from "./error.js";
 
 // 关键字
 const keywords = new Map([
-  ["and",     TokenType.AND],
-  ["class",   TokenType.CLASS],
-  ["else",    TokenType.ELSE],
-  ["false",   TokenType.FALSE],
-  ["for",     TokenType.FOR],
-  ["fun",     TokenType.FUN],
-  ["if",      TokenType.IF],
-  ["nil",     TokenType.NIL],
-  ["or",      TokenType.OR],
-  ["print",   TokenType.PRINT],
-  ["return",  TokenType.RETURN],
-  ["super",   TokenType.SUPER],
-  ["this",    TokenType.THIS],
-  ["true",    TokenType.TRUE],
-  ["var",     TokenType.VAR],
-  ["while",   TokenType.WHILE],
+  ['and',     TokenType.AND],
+  ['class',   TokenType.CLASS],
+  ['else',    TokenType.ELSE],
+  ['false',   TokenType.FALSE],
+  ['for',     TokenType.FOR],
+  ['fun',     TokenType.FUN],
+  ['if',      TokenType.IF],
+  ['nil',     TokenType.NIL],
+  ['or',      TokenType.OR],
+  ['print',   TokenType.PRINT],
+  ['return',  TokenType.RETURN],
+  ['super',   TokenType.SUPER],
+  ['this',    TokenType.THIS],
+  ['true',    TokenType.TRUE],
+  ['var',     TokenType.VAR],
+  ['while',   TokenType.WHILE],
 ]);
 
 class Scanner {
@@ -46,7 +46,7 @@ class Scanner {
       this.scanToken();
     }
 
-    this.tokens.push(new Token(TokenType.EOF, "", null, this.line));
+    this.tokens.push(new Token(TokenType.EOF, '', null, this.line));
     return this.tokens;
   }
 
@@ -99,7 +99,7 @@ class Scanner {
         } else if (this.isAlpha(c)) {
           this.identifier();
         } else {
-          error(this.line, 'Unexpected character.');
+          Error.error(this.line, 'Unexpected character.');
         }
     }
   }
@@ -145,7 +145,7 @@ class Scanner {
     }
 
     if (this.isAtEnd()) {
-      error(this.line, "Unterminated string.");
+      Error.error(this.line, 'Unterminated string.');
       return;
     }
 

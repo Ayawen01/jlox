@@ -1,6 +1,5 @@
 import Scanner from "./scanner.js";
-
-let hadError = false;
+import Error from "./error.js";
 
 function main () {
   const args = Deno.args;
@@ -21,7 +20,7 @@ function runPrompt () {
   while (true) {
     const code = prompt('>>>');
     run(code);
-    hadError = false;
+    Error.hadError = true;
   }
 }
 
@@ -36,7 +35,7 @@ function runFile (path) {
   } catch (err) {
     console.error(err.message);
   }
-  if (hadError) Deno.exit(65);
+  if (Error.hadError) Deno.exit(65);
 }
 
 /**
