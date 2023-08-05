@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --allow-read src/main.js"
+    "dev": "deno run --allow-read src/main.js",
+    "compile": "deno compile --allow-read --output jlox src/main.js"
   }
 }

@@ -1,3 +1,8 @@
 {
-  "deno.enable": false
+  "deno.enable": true,
+  "deno.path": "",
+  "deno.codeLens.implementations": false,
+  "deno.inlayHints.enumMemberValues.enabled": false,
+  "deno.inlayHints.parameterNames.suppressWhenArgumentMatchesName": true,
+  "deno.internalDebug": true
 }
