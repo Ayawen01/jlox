@@ -1,5 +1,3 @@
-import TokenType from "./tokenType.js";
-
 class Token {
   /**
    * 
