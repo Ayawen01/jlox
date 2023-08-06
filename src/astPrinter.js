@@ -4,7 +4,7 @@ class AstPrinter {
    * @param {Expression} expr 
    */
   print (expr) {
-    expr.accept(this);
+    return expr.accept(this);
   }
 
   /**
@@ -33,6 +33,15 @@ class AstPrinter {
   visitLiteralExpr (expr) {
     if (expr.value === null) return 'nil';
     return expr.value;
+  }
+
+  /**
+   * 
+   * @param {Expression.Unary} expr 
+   * @returns {String}
+   */
+  visitUnaryExpr (expr) {
+    return this.parenthesize(expr.operator.lexeme, expr.right);
   }
 
   /**
