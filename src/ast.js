@@ -4,6 +4,23 @@ class Statement { }
 
 class Expression { }
 
+class Assign extends Expression {
+  /**
+   * 
+   * @param {Token} name 
+   * @param {Expression} value 
+   */
+  constructor(name, value) {
+    super();
+    this.name = name;
+    this.value = value;
+  }
+
+  accept (visitor) {
+    return visitor.visitAssignExpr(this);
+  }
+}
+
 class Binary extends Expression {
   /**
    * 
@@ -20,6 +37,42 @@ class Binary extends Expression {
 
   accept (visitor) {
     return visitor.visitBinaryExpr(this);
+  }
+}
+
+class Call extends Expression {
+  /**
+   * 
+   * @param {Expression} callee 
+   * @param {Token} paren 
+   * @param {Array<Expression>} args 
+   */
+  constructor(callee, paren, args) {
+    super();
+    this.callee = callee;
+    this.paren = paren;
+    this.args = args;
+  }
+
+  accept (visitor) {
+    return visitor.visitCallExpr(this);
+  }
+}
+
+class Get extends Expression {
+  /**
+   * 
+   * @param {Expression} object 
+   * @param {Token} name 
+   */
+  constructor(object, name) {
+    super();
+    this.object = object;
+    this.name = name;
+  }
+
+  accept (visitor) {
+    return visitor.visitGetExpr(this);
   }
 }
 
@@ -75,7 +128,7 @@ const Stmt = {
 };
 
 const Expr = {
-  Binary, Grouping, Literal, Unary
+  Assign, Binary, Call, Get, Grouping, Literal, Unary
 };
 
 export {
