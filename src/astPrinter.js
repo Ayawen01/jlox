@@ -48,7 +48,7 @@ class AstPrinter {
    * 
    * @param {String} name 
    * @param  {...Expression} exprs 
-   * @returns 
+   * @returns {String}
    */
   parenthesize (name, ...exprs) {
     let builder = '(' + name;

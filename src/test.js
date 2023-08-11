@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.197.0/assert/assert_equals.ts";
-import { Expr } from "./ast.js";
+import { expr as Expr } from "./ast.js";
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
 import AstPrinter from "./astPrinter.js";
