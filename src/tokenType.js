@@ -13,7 +13,7 @@ const TokenType = {
   LESS: '<', LESS_EQUAL: '<=',
 
   // Literals.
-  IDENTIFIER: 'IDENTIFIER', STRING: 'STRING', NUMBER: 'NUMBER',
+  IDENTIFIER: 'identifier', STRING: 'string', NUMBER: 'number',
 
   // Keywords.
   AND: 'and', CLASS: 'class', ELSE: 'else', FALSE: 'false', FUN: 'fun', FOR: 'for', IF: 'if', NIL: 'nil', OR: 'or',
