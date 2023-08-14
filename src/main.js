@@ -1,5 +1,5 @@
 import Scanner from "./scanner.js";
-import Error from "./error.js";
+import LoxError from "./error.js";
 
 function main () {
   const args = Deno.args;
@@ -20,7 +20,7 @@ function runPrompt () {
   while (true) {
     const code = prompt('>>>');
     run(code);
-    Error.hadError = true;
+    LoxError.hadError = true;
   }
 }
 
@@ -35,7 +35,7 @@ function runFile (path) {
   } catch (err) {
     console.error(err.message);
   }
-  if (Error.hadError) Deno.exit(65);
+  if (LoxError.hadError) Deno.exit(65);
 }
 
 /**

@@ -1,4 +1,6 @@
-class Error {
+import TokenType from "./tokenType.js";
+
+class LoxError extends Error {
   static hadError = false;
 
   /**
@@ -6,8 +8,16 @@ class Error {
    * @param {Number} line 
    * @param {String} message 
    */
-  static error (line, message) {
-    Error.report(line, '', message);
+  static scanError (line, message) {
+    LoxError.report(line, '', message);
+  }
+
+  static parseError(token, message) {
+    if (token.type === TokenType.EOF) {
+      LoxError.report(token.line, ' at end', message);
+    } else {
+      LoxError.report(token.line, ` at '${token.lexeme}'`, message);
+    }
   }
 
   /**
@@ -25,4 +35,4 @@ class Error {
   }
 }
 
-export default Error;
+export default LoxError;

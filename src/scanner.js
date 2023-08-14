@@ -1,6 +1,6 @@
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
-import Error from "./error.js";
+import LoxError from "./error.js";
 
 // 关键字
 const keywords = new Map([
@@ -99,7 +99,7 @@ class Scanner {
         } else if (this.isAlpha(c)) {
           this.identifier();
         } else {
-          Error.error(this.line, 'Unexpected character.');
+          LoxError.scanError(this.line, 'Unexpected character.');
         }
     }
   }
@@ -145,7 +145,7 @@ class Scanner {
     }
 
     if (this.isAtEnd()) {
-      Error.error(this.line, 'Unterminated string.');
+      LoxError.scanError(this.line, 'Unterminated string.');
       return;
     }
 
