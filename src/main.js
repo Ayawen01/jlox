@@ -1,5 +1,6 @@
 import Scanner from "./scanner.js";
 import LoxError from "./error.js";
+import Parser from "./parser.js";
 
 function main () {
   const args = Deno.args;
@@ -20,7 +21,6 @@ function runPrompt () {
   while (true) {
     const code = prompt('>>>');
     run(code);
-    LoxError.hadError = true;
   }
 }
 
@@ -45,8 +45,14 @@ function runFile (path) {
 function run (source) {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
-
   tokens.forEach(token => console.log(token));
+
+  const parser = new Parser(tokens);
+  const expr = parser.parse();
+
+  if (LoxError.hadError) return;
+
+  console.log(expr);
 }
 
 main();
