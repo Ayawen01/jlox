@@ -46,6 +46,7 @@ function runFile (path) {
 function run (source) {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
+  console.log('--tokens:');
   tokens.forEach(token => console.log(token));
 
   const parser = new Parser(tokens);
@@ -56,6 +57,9 @@ function run (source) {
   const interpreter = new Interpreter();
   const result = interpreter.interpret(expr);
 
+  console.log('--ast tree:');
+  console.log(expr);
+  console.log('--evaluate:');
   console.log(result);
 }
 
