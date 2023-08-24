@@ -1,6 +1,7 @@
 import Scanner from "./scanner.js";
 import LoxError from "./error.js";
 import Parser from "./parser.js";
+import Interpreter from "./interpreter.js";
 
 function main () {
   const args = Deno.args;
@@ -19,7 +20,7 @@ function main () {
  */
 function runPrompt () {
   while (true) {
-    const code = prompt('>>>');
+    const code = prompt('>>>') ?? '';
     run(code);
   }
 }
@@ -52,7 +53,10 @@ function run (source) {
 
   if (LoxError.hadError) return;
 
-  console.log(expr);
+  const interpreter = new Interpreter();
+  const result = interpreter.interpret(expr);
+
+  console.log(result);
 }
 
 main();
