@@ -1,8 +1,17 @@
+import LoxError from "./error.js";
+import Token from "./token.js";
 import TokenType from "./tokenType.js";
 
 class Interpreter {
   interpret (ast) {
-    return this.evaluate(ast);
+    try {
+      const value = this.evaluate(ast);
+      console.log(this.stringify(value));
+    } catch (err) {
+      if (err instanceof RuntimeError) {
+        LoxError.runtimeError(err);
+      }
+    }
   }
 
   /**
@@ -68,6 +77,11 @@ class Interpreter {
     return !obj;
   }
 
+  stringify(obj) {
+    if (obj === null) return "nil";
+    return obj;
+  }
+
   /**
    * 
    * @param {Expression} expr 
@@ -75,6 +89,18 @@ class Interpreter {
    */
   evaluate (expr) {
     return expr.accept(this);
+  }
+}
+
+class RuntimeError extends Error {
+  /**
+   * 
+   * @param {Token} token 
+   * @param {String} msg 
+   */
+  constructor(token, msg) {
+    super(msg);
+    this.token = token;
   }
 }
 

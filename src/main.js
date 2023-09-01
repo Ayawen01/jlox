@@ -51,16 +51,15 @@ function run (source) {
 
   const parser = new Parser(tokens);
   const expr = parser.parse();
-
-  if (LoxError.hadError) return;
-
-  const interpreter = new Interpreter();
-  const result = interpreter.interpret(expr);
-
   console.log('--ast tree:');
   console.log(expr);
+
+  if (LoxError.hadError) Deno.exit(65);
+  if (LoxError.hadRuntimeError) Deno.exit(70);
+
   console.log('--evaluate:');
-  console.log(result);
+  const interpreter = new Interpreter();
+  interpreter.interpret(expr);
 }
 
 main();
