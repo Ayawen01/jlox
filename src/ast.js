@@ -1,5 +1,3 @@
-import Token from "./token.js";
-
 class Statement { }
 
 class Block extends Statement {

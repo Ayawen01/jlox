@@ -1,12 +1,12 @@
 import LoxError from "./error.js";
-import Token from "./token.js";
 import TokenType from "./tokenType.js";
 
 class Interpreter {
-  interpret (ast) {
+  interpret (statements) {
     try {
-      const value = this.evaluate(ast);
-      console.log(this.stringify(value));
+      statements.forEach(stmt => {
+        this.execute(stmt);
+      });
     } catch (err) {
       if (err instanceof RuntimeError) {
         LoxError.runtimeError(err);
@@ -77,7 +77,7 @@ class Interpreter {
     return !obj;
   }
 
-  stringify(obj) {
+  stringify (obj) {
     if (obj === null) return "nil";
     return obj;
   }
@@ -89,6 +89,31 @@ class Interpreter {
    */
   evaluate (expr) {
     return expr.accept(this);
+  }
+
+  /**
+   * 
+   * @param {Statement} stmt 
+   */
+  execute (stmt) {
+    stmt.accept(this);
+  }
+
+  /**
+   * 
+   * @param {Statement.Expr} stmt 
+   */
+  visitExpressionStmt (stmt) {
+    this.evaluate(stmt.expression);
+  }
+
+  /**
+   * 
+   * @param {Statement.Print} stmt 
+   */
+  visitPrintStmt (stmt) {
+    const value = this.evaluate(stmt.expression);
+    console.log(this.stringify(value));
   }
 }
 

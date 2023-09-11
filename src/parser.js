@@ -1,6 +1,5 @@
-import Token from "./token.js";
 import TokenType from "./tokenType.js";
-import { expr as Expr } from "./ast.js";
+import { expr as Expr, stmt as Stmt } from "./ast.js";
 import LoxError from "./error.js";
 
 class Parser {
@@ -18,14 +17,11 @@ class Parser {
    * @returns {Expression}
    */
   parse () {
-    try {
-      return this.expression();
-    } catch (err) {
-      console.log(err);
-      if (err instanceof ParserError) {
-        return;
-      }
+    const statements = [];
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
     }
+    return statements;
   }
 
   /**
@@ -34,6 +30,36 @@ class Parser {
    */
   expression () {
     return this.equality();
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  statement () {
+    if (this.match(TokenType.PRINT)) return this.printStatement();
+
+    return this.expressionStatement();
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  printStatement () {
+    const value = this.expression();
+    this.consume(TokenType.SEMICOLON, 'Expect \';\' after value.');
+    return new Stmt.Print(value);
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  expressionStatement () {
+    const expr = this.expression();
+    this.consume(TokenType.SEMICOLON, 'Expect \';\' after expression.');
+    return new Stmt.Expr(expr);
   }
 
   /**

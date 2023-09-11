@@ -50,16 +50,16 @@ function run (source) {
   tokens.forEach(token => console.log(token));
 
   const parser = new Parser(tokens);
-  const expr = parser.parse();
+  const statements = parser.parse();
   console.log('--ast tree:');
-  console.log(expr);
+  console.log(statements);
 
   if (LoxError.hadError) Deno.exit(65);
   if (LoxError.hadRuntimeError) Deno.exit(70);
 
   console.log('--evaluate:');
   const interpreter = new Interpreter();
-  interpreter.interpret(expr);
+  interpreter.interpret(statements);
 }
 
 main();
