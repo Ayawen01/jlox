@@ -14,12 +14,12 @@ class Parser {
 
   /**
    * 
-   * @returns {Expression}
+   * @returns {Array<Statement>}
    */
   parse () {
     const statements = [];
     while (!this.isAtEnd()) {
-      statements.push(this.statement());
+      statements.push(this.declaration());
     }
     return statements;
   }
@@ -30,6 +30,21 @@ class Parser {
    */
   expression () {
     return this.equality();
+  }
+
+  /**
+   * @returns {Statement}
+   */
+  declaration () {
+    try {
+      if (this.match(TokenType.VAR)) return this.varDeclaration();
+
+      return this.statement();
+    } catch (err) {
+      if (err instanceof ParserError) {
+        this.synchronize();
+      }
+    }
   }
 
   /**
@@ -50,6 +65,22 @@ class Parser {
     const value = this.expression();
     this.consume(TokenType.SEMICOLON, 'Expect \';\' after value.');
     return new Stmt.Print(value);
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  varDeclaration () {
+    const name = this.consume(TokenType.IDENTIFIER, 'Expect variable name.');
+
+    let initializer;
+    if (this.match(TokenType.EQUAL)) {
+      initializer = this.expression();
+    }
+
+    this.consume(TokenType.SEMICOLON, 'Expect \';\' after variable declaration.');
+    return new Stmt.Var(name, initializer);
   }
 
   /**
@@ -151,6 +182,10 @@ class Parser {
 
     if (this.match(TokenType.NUMBER, TokenType.STRING)) {
       return new Expr.Literal(this.previous().literal);
+    }
+
+    if (this.match(TokenType.IDENTIFIER)) {
+      return new Expr.Variable(this.previous());
     }
 
     if (this.match(TokenType.LEFT_PAREN)) {
