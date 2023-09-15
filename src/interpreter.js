@@ -1,7 +1,12 @@
+import Environment from "./environment.js";
 import LoxError from "./error.js";
 import TokenType from "./tokenType.js";
 
 class Interpreter {
+  constructor() {
+    this.environment = new Environment();
+  }
+
   interpret (statements) {
     try {
       statements.forEach(stmt => {
@@ -70,6 +75,15 @@ class Interpreter {
 
   /**
    * 
+   * @param {Expression.Variable} expr 
+   * @returns 
+   */
+  visitVariableExpr(expr) {
+    return this.environment.get(expr.name);
+  }
+
+  /**
+   * 
    * @param {Object} obj 
    * @returns {Boolean}
    */
@@ -114,6 +128,30 @@ class Interpreter {
   visitPrintStmt (stmt) {
     const value = this.evaluate(stmt.expression);
     console.log(this.stringify(value));
+  }
+
+  /**
+   * 
+   * @param {Statement.Var} stmt 
+   */
+  visitVarStmt(stmt) {
+    let value = null;
+    if (stmt.initializer !== null) {
+      value = this.evaluate(stmt.initializer);
+    }
+    this.environment.define(stmt.name.lexeme, value);
+    console.log(this.environment);
+  }
+
+  /**
+   * 
+   * @param {Statement.Assign} expr 
+   * @returns 
+   */
+  visitAssignExpr(expr) {
+    const value = this.evaluate(expr.value);
+    this.environment.assign(expr.name, value);
+    return value;
   }
 }
 

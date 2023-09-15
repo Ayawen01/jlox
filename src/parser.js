@@ -29,7 +29,7 @@ class Parser {
    * @returns {Expression}
    */
   expression () {
-    return this.equality();
+    return this.assignment();
   }
 
   /**
@@ -91,6 +91,27 @@ class Parser {
     const expr = this.expression();
     this.consume(TokenType.SEMICOLON, 'Expect \';\' after expression.');
     return new Stmt.Expr(expr);
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  assignment() {
+    const expr = this.equality();
+
+    if (this.match(TokenType.EQUAL)) {
+      const equals = this.previous();
+      const value = this.assignment();
+
+      if (expr instanceof Expr.Variable) {
+        return new Expr.Assign(expr.name, value);
+      }
+
+      this.error(equals, 'Invalid assignment target.');
+    }
+
+    return expr;
   }
 
   /**
