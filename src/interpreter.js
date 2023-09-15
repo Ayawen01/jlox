@@ -1,5 +1,5 @@
 import Environment from "./environment.js";
-import { LoxError } from "./error.js";
+import { LoxError, RuntimeError } from "./error.js";
 import TokenType from "./tokenType.js";
 
 class Interpreter {

@@ -1,3 +1,5 @@
+import { RuntimeError } from "./error.js";
+
 class Environment {
   constructor() {
     this.values = new Map();
