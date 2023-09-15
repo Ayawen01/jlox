@@ -26,7 +26,6 @@ class Scanner {
   /**
    * 
    * @param {String} source 
-   * @param {Array<Token>} tokens
    */
   constructor(source) {
     this.source = source;
@@ -104,10 +103,6 @@ class Scanner {
     }
   }
 
-  /**
-   * 处理关键字和标识符
-   * @returns {void}
-   */
   identifier () {
     while (this.isAlphaNumeric(this.peek())) this.advance();
 
@@ -117,10 +112,6 @@ class Scanner {
     this.addToken(type);
   }
 
-  /**
-   * 处理数字字面量
-   * @returns {void}
-   */
   number () {
     while (this.isDigit(this.peek()) && !this.isAtEnd()) this.advance();
 
@@ -134,10 +125,6 @@ class Scanner {
     this.addToken(TokenType.NUMBER, number);
   }
 
-  /**
-   * 处理字符串字面量
-   * @returns {void} 
-   */
   string () {
     while (this.peek() !== '"' && !this.isAtEnd()) {
       if (this.peek() === '\n') this.line++;
@@ -156,7 +143,6 @@ class Scanner {
   }
 
   /**
-   * 匹配当前字符跟expected是否相等
    * @param {String} expected 
    * @returns {Boolean}
    */
@@ -168,7 +154,6 @@ class Scanner {
   }
 
   /**
-   * 返回当前字符
    * @returns {String}
    */
   peek () {
@@ -177,7 +162,6 @@ class Scanner {
   }
 
   /**
-   * 返回下一个字符
    * @returns {String}
    */
   peekNext () {
@@ -187,7 +171,6 @@ class Scanner {
   }
 
   /**
-   * 判断是否为字母
    * @param {String} c 
    * @returns {Boolean}
    */
@@ -198,7 +181,6 @@ class Scanner {
   }
 
   /**
-   * 判断是否为字符或数字
    * @param {String} c
    * @returns {Boolean}
    */
@@ -207,7 +189,6 @@ class Scanner {
   }
 
   /**
-   * 判断是否为数字
    * @param {String} c 
    * @returns {Boolean}
    */
@@ -216,7 +197,6 @@ class Scanner {
   }
 
   /**
-   * 辅助函数，用来告诉我们是否已消费完所有字符。
    * @returns {Boolean}
    */
   isAtEnd () {
@@ -224,7 +204,6 @@ class Scanner {
   }
 
   /**
-   * 推进
    * @returns {String}
    */
   advance () {
@@ -232,7 +211,6 @@ class Scanner {
   }
 
   /**
-   * 添加token
    * @param {TokenType} type 
    * @param {Object} literal 
    */

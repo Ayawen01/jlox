@@ -6,9 +6,9 @@ class Environment {
   /**
    * 
    * @param {Token} name 
-   * @returns 
+   * @returns {Object}
    */
-  get(name) {
+  get (name) {
     if (this.values.has(name.lexeme)) {
       return this.values.get(name.lexeme);
     }
@@ -20,9 +20,8 @@ class Environment {
    * 
    * @param {Token} name 
    * @param {Object} value 
-   * @returns 
    */
-  assign(name, value) {
+  assign (name, value) {
     if (this.values.has(name.lexeme)) {
       this.values.set(name.lexeme, value);
       return;
@@ -36,7 +35,7 @@ class Environment {
    * @param {String} name 
    * @param {Object} value 
    */
-  define(name, value) {
+  define (name, value) {
     this.values.set(name, value);
   }
 }

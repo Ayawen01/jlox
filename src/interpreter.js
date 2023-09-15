@@ -78,7 +78,7 @@ class Interpreter {
    * @param {Expression.Variable} expr 
    * @returns 
    */
-  visitVariableExpr(expr) {
+  visitVariableExpr (expr) {
     return this.environment.get(expr.name);
   }
 
@@ -134,21 +134,20 @@ class Interpreter {
    * 
    * @param {Statement.Var} stmt 
    */
-  visitVarStmt(stmt) {
+  visitVarStmt (stmt) {
     let value = null;
     if (stmt.initializer !== null) {
       value = this.evaluate(stmt.initializer);
     }
     this.environment.define(stmt.name.lexeme, value);
-    console.log(this.environment);
   }
 
   /**
    * 
    * @param {Statement.Assign} expr 
-   * @returns 
+   * @returns {Object}
    */
-  visitAssignExpr(expr) {
+  visitAssignExpr (expr) {
     const value = this.evaluate(expr.value);
     this.environment.assign(expr.name, value);
     return value;

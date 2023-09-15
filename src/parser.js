@@ -95,9 +95,9 @@ class Parser {
 
   /**
    * 
-   * @returns {Statement}
+   * @returns {Expression}
    */
-  assignment() {
+  assignment () {
     const expr = this.equality();
 
     if (this.match(TokenType.EQUAL)) {
@@ -115,7 +115,6 @@ class Parser {
   }
 
   /**
-   * `!= ==`
    * @returns {Expression}
    */
   equality () {
@@ -131,7 +130,6 @@ class Parser {
   }
 
   /**
-   * `> >= < <=`
    * @returns {Expression}
    */
   comparison () {
@@ -147,7 +145,6 @@ class Parser {
   }
 
   /**
-   * `+ -`
    * @returns {Expression}
    */
   term () {
@@ -163,7 +160,6 @@ class Parser {
   }
 
   /**
-   * `* /`
    * @returns {Expression}
    */
   factor () {
@@ -179,7 +175,6 @@ class Parser {
   }
 
   /**
-   * `!expr -expr`
    * @returns {Expression}
    */
   unary () {
