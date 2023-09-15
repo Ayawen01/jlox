@@ -1,29 +1,22 @@
-import TokenType from "./tokenType.js";
-
 class LoxError extends Error {
   static hadError = false;
   static hadRuntimeError = false;
 
   /**
    * 
-   * @param {Number} line 
-   * @param {String} message 
+   * @param {ScanError} err 
    */
-  static scanError (line, message) {
-    LoxError.report(line, '', message);
+  static scanError (err) {
+    this.hadError = true;
+    console.error(err);
   }
 
   /**
    * 
-   * @param {Token} token 
-   * @param {String} message 
+   * @param {ParserError} err 
    */
-  static parseError (token, message) {
-    if (token.type === TokenType.EOF) {
-      LoxError.report(token.line, ' at end', message);
-    } else {
-      LoxError.report(token.line, ` at '${token.lexeme}'`, message);
-    }
+  static parseError (err) {
+    console.error(err);
   }
 
   /**
@@ -31,23 +24,48 @@ class LoxError extends Error {
    * @param {RuntimeError} err 
    */
   static runtimeError (err) {
-    console.log(`${err.message}\n[line ${error.token.line}]`);
     this.hadRuntimeError = true;
-  }
-
-  /**
-   * 
-   * @param {Number} line 
-   * @param {String} where 
-   * @param {String} message 
-   */
-  static report (line, where, message) {
-    if (where === '') {
-      console.error(`[line ${line}] Error: ${message}`);
-    } else {
-      console.error(`[line ${line}] Error ${where}: ${message}`);
-    }
+    console.error(err);
   }
 }
 
-export default LoxError;
+class ScanError extends Error {
+  /**
+   * 
+   * @param {Number} line 
+   * @param {String} message 
+   */
+  constructor(line, message) {
+    super(message);
+    this.name = 'ScanError';
+    this.line = line;
+  }
+}
+
+class ParserError extends Error {
+  /**
+   * 
+   * @param {Token} token 
+   * @param {String} message 
+   */
+  constructor(token, message) {
+    super(message);
+    this.token = token;
+    this.name = 'ParserError';
+  }
+}
+
+class RuntimeError extends Error {
+  /**
+   * 
+   * @param {Token} token 
+   * @param {String} message 
+   */
+  constructor(token, message) {
+    super(message);
+    this.token = token;
+    this.name = 'RuntimeError';
+  }
+}
+
+export { LoxError, ScanError, ParserError, RuntimeError };

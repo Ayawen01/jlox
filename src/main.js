@@ -1,5 +1,5 @@
 import Scanner from "./scanner.js";
-import LoxError from "./error.js";
+import { LoxError } from "./error.js";
 import Parser from "./parser.js";
 import Interpreter from "./interpreter.js";
 

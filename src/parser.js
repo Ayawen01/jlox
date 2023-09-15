@@ -1,6 +1,6 @@
 import TokenType from "./tokenType.js";
 import { expr as Expr, stmt as Stmt } from "./ast.js";
-import LoxError from "./error.js";
+import { LoxError, ParserError } from "./error.js";
 
 class Parser {
   /**
@@ -42,6 +42,7 @@ class Parser {
       return this.statement();
     } catch (err) {
       if (err instanceof ParserError) {
+        LoxError.parseError(err);
         this.synchronize();
       }
     }
@@ -108,7 +109,7 @@ class Parser {
         return new Expr.Assign(expr.name, value);
       }
 
-      this.error(equals, 'Invalid assignment target.');
+      throw new ParserError(equals, 'Invalid assignment target.');
     }
 
     return expr;
@@ -210,7 +211,7 @@ class Parser {
       return new Expr.Grouping(expr);
     }
 
-    throw this.error(this.peek(), 'Expect expression.');
+    throw new ParserError(this.peek(), 'Expect expression.');
   }
 
   /**
@@ -237,7 +238,7 @@ class Parser {
   consume (type, message) {
     if (this.check(type)) return this.advance();
 
-    throw this.error(this.peek(), message);
+    throw new ParserError(this.peek(), message);
   }
 
   /**
@@ -283,17 +284,6 @@ class Parser {
     return this.tokens[this.current - 1];
   }
 
-  /**
-   * 
-   * @param {Token} token 
-   * @param {String} message 
-   * @returns {ParserError}
-   */
-  error (token, message) {
-    LoxError.parseError(token, message);
-    return new ParserError();
-  }
-
   synchronize () {
     this.advance();
 
@@ -315,10 +305,6 @@ class Parser {
       this.advance();
     }
   }
-}
-
-class ParserError extends Error {
-
 }
 
 export default Parser;

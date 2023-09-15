@@ -1,5 +1,5 @@
 import Environment from "./environment.js";
-import LoxError from "./error.js";
+import { LoxError } from "./error.js";
 import TokenType from "./tokenType.js";
 
 class Interpreter {
@@ -151,18 +151,6 @@ class Interpreter {
     const value = this.evaluate(expr.value);
     this.environment.assign(expr.name, value);
     return value;
-  }
-}
-
-class RuntimeError extends Error {
-  /**
-   * 
-   * @param {Token} token 
-   * @param {String} msg 
-   */
-  constructor(token, msg) {
-    super(msg);
-    this.token = token;
   }
 }
 

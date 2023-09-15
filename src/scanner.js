@@ -1,25 +1,25 @@
 import Token from "./token.js";
 import TokenType from "./tokenType.js";
-import LoxError from "./error.js";
+import { LoxError, ScanError } from "./error.js";
 
 // 关键字
 const keywords = new Map([
-  ['and',     TokenType.AND],
-  ['class',   TokenType.CLASS],
-  ['else',    TokenType.ELSE],
-  ['false',   TokenType.FALSE],
-  ['for',     TokenType.FOR],
-  ['fun',     TokenType.FUN],
-  ['if',      TokenType.IF],
-  ['nil',     TokenType.NIL],
-  ['or',      TokenType.OR],
-  ['print',   TokenType.PRINT],
-  ['return',  TokenType.RETURN],
-  ['super',   TokenType.SUPER],
-  ['this',    TokenType.THIS],
-  ['true',    TokenType.TRUE],
-  ['var',     TokenType.VAR],
-  ['while',   TokenType.WHILE],
+  ['and', TokenType.AND],
+  ['class', TokenType.CLASS],
+  ['else', TokenType.ELSE],
+  ['false', TokenType.FALSE],
+  ['for', TokenType.FOR],
+  ['fun', TokenType.FUN],
+  ['if', TokenType.IF],
+  ['nil', TokenType.NIL],
+  ['or', TokenType.OR],
+  ['print', TokenType.PRINT],
+  ['return', TokenType.RETURN],
+  ['super', TokenType.SUPER],
+  ['this', TokenType.THIS],
+  ['true', TokenType.TRUE],
+  ['var', TokenType.VAR],
+  ['while', TokenType.WHILE],
 ]);
 
 class Scanner {
@@ -98,7 +98,7 @@ class Scanner {
         } else if (this.isAlpha(c)) {
           this.identifier();
         } else {
-          LoxError.scanError(this.line, 'Unexpected character.');
+          LoxError.scanError(new ScanError(this.line, 'Unexpected character.'));
         }
     }
   }
@@ -132,7 +132,7 @@ class Scanner {
     }
 
     if (this.isAtEnd()) {
-      LoxError.scanError(this.line, 'Unterminated string.');
+      LoxError.scanError(new ScanError(this.line, 'Unterminated string.'));
       return;
     }
 
