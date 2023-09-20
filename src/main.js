@@ -3,14 +3,24 @@ import { LoxError } from "./error.js";
 import Parser from "./parser.js";
 import Interpreter from "./interpreter.js";
 
+let astMode = false;
+
 function main () {
   const args = Deno.args;
   if (args.length === 0) {
     runPrompt();
   } else if (args.length === 1) {
-    runFile(args[0]);
+    if (args[0] === '--ast') {
+      astMode = true;
+      runPrompt();
+    } else {
+      runFile(args[0]);
+    }
+  } else if (args.length === 2) {
+    astMode = true;
+    runFile(args[1]);
   } else {
-    console.error('Usage: jlox [script]');
+    console.error('Usage: jlox [--ast] [script]');
     Deno.exit(64);
   }
 }
@@ -46,18 +56,21 @@ function runFile (path) {
 function run (source) {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
-  console.log('--tokens:');
-  tokens.forEach(token => console.log(token));
 
   const parser = new Parser(tokens);
   const statements = parser.parse();
-  console.log('--ast tree:');
-  console.log(statements);
+
+  if (astMode) {
+    console.log('--tokens:');
+    tokens.forEach(token => console.log(token));
+
+    console.log('--ast tree:');
+    console.log(statements);
+  }
 
   if (LoxError.hadError) Deno.exit(65);
   if (LoxError.hadRuntimeError) Deno.exit(70);
-
-  console.log('--evaluate:');
+  
   const interpreter = new Interpreter();
   interpreter.interpret(statements);
 }

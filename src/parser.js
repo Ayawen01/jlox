@@ -54,6 +54,7 @@ class Parser {
    */
   statement () {
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.LEFT_BRACE)) return new Stmt.Block(this.block());
 
     return this.expressionStatement();
   }
@@ -92,6 +93,21 @@ class Parser {
     const expr = this.expression();
     this.consume(TokenType.SEMICOLON, 'Expect \';\' after expression.');
     return new Stmt.Expr(expr);
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  block() {
+    const statements = [];
+
+    while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      statements.push(this.declaration());
+    }
+
+    this.consume(TokenType.RIGHT_BRACE, 'Expect \'}\' after block.');
+    return statements;
   }
 
   /**

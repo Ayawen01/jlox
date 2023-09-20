@@ -115,6 +115,32 @@ class Interpreter {
 
   /**
    * 
+   * @param {Array<Statement>} statements 
+   * @param {Environment} environment 
+   */
+  executeBlock(statements, environment) {
+    const previous = this.environment;
+    try {
+      this.environment = environment;
+
+      for (const statement of statements) {
+        this.execute(statement);
+      }
+    } finally {
+      this.environment = previous;
+    }
+  }
+
+  /**
+   * 
+   * @param {Statement.Block} stmt 
+   */
+  visitBlockStmt(stmt) {
+    this.executeBlock(stmt.statements, new Environment(this.environment));
+  }
+
+  /**
+   * 
    * @param {Statement.Expr} stmt 
    */
   visitExpressionStmt (stmt) {
