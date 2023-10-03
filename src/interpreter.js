@@ -53,6 +53,22 @@ class Interpreter {
 
   /**
    * 
+   * @param {Expression.Logical} expr 
+   */
+  visitLogicalExpr (expr) {
+    const left = this.evaluate(expr.left);
+
+    if (expr.operator.type === TokenType.OR) {
+      if (left) return left;
+    } else {
+      if (!left) return left;
+    }
+
+    return this.evaluate(expr.right);
+  }
+
+  /**
+   * 
    * @param {Expression.Grouping} expr 
    * @returns {Object}
    */
@@ -68,7 +84,7 @@ class Interpreter {
   visitUnaryExpr (expr) {
     const right = this.evaluate(expr.right);
     switch (expr.operator.type) {
-      case TokenType.BANG: return this.isTruthy(right);
+      case TokenType.BANG: return !right;
       case TokenType.MINUS: return -right;
     }
   }
@@ -80,15 +96,6 @@ class Interpreter {
    */
   visitVariableExpr (expr) {
     return this.environment.get(expr.name);
-  }
-
-  /**
-   * 
-   * @param {Object} obj 
-   * @returns {Boolean}
-   */
-  isTruthy (obj) {
-    return !obj;
   }
 
   stringify (obj) {
@@ -118,7 +125,7 @@ class Interpreter {
    * @param {Array<Statement>} statements 
    * @param {Environment} environment 
    */
-  executeBlock(statements, environment) {
+  executeBlock (statements, environment) {
     const previous = this.environment;
     try {
       this.environment = environment;
@@ -135,7 +142,7 @@ class Interpreter {
    * 
    * @param {Statement.Block} stmt 
    */
-  visitBlockStmt(stmt) {
+  visitBlockStmt (stmt) {
     this.executeBlock(stmt.statements, new Environment(this.environment));
   }
 
@@ -145,6 +152,18 @@ class Interpreter {
    */
   visitExpressionStmt (stmt) {
     this.evaluate(stmt.expression);
+  }
+
+  /**
+   * 
+   * @param {Statement.If} stmt 
+   */
+  visitIfStmt (stmt) {
+    if (this.evaluate(stmt.condition)) {
+      this.execute(stmt.thenBranch);
+    } else if (stmt.elseBranch !== null) {
+      this.execute(stmt.elseBranch);
+    }
   }
 
   /**
