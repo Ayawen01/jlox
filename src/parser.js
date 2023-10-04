@@ -53,11 +53,58 @@ class Parser {
    * @returns {Statement}
    */
   statement () {
+    if (this.match(TokenType.FOR)) return this.forStatement();
     if (this.match(TokenType.IF)) return this.ifStatement();
     if (this.match(TokenType.PRINT)) return this.printStatement();
+    if (this.match(TokenType.WHILE)) return this.whileStatement();
     if (this.match(TokenType.LEFT_BRACE)) return new Stmt.Block(this.block());
 
     return this.expressionStatement();
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  forStatement () {
+    this.consume(TokenType.LEFT_PAREN, 'Expect \'(\' after \'for\'.');
+
+    let initializer;
+    if (this.match(TokenType.SEMICOLON)) {
+      initializer = null;
+    } else if (this.match(TokenType.VAR)) {
+      initializer = this.varDeclaration();
+    } else {
+      initializer = this.expressionStatement();
+    }
+
+    let condition;
+    if (!this.check(TokenType.SEMICOLON)) {
+      condition = this.expression();
+    }
+    this.consume(TokenType.SEMICOLON, 'Expect \';\' after loop condition.');
+
+    let increment;
+    if (!this.check(TokenType.RIGHT_PAREN)) {
+      increment = this.expression();
+    }
+    this.consume(TokenType.RIGHT_PAREN, 'Expect \')\' after for clauses.');
+
+    let body = this.statement();
+    if (increment) {
+      body = new Stmt.Block([body, new Stmt.Expr(increment)]);
+    }
+
+    if (!condition) {
+      condition = new Expr.Literal(true);
+    }
+    body = new Stmt.While(condition, body);
+
+    if (initializer) {
+      body = new Stmt.Block([initializer, body]);
+    }
+
+    return body;
   }
 
   /**
@@ -102,6 +149,18 @@ class Parser {
 
     this.consume(TokenType.SEMICOLON, 'Expect \';\' after variable declaration.');
     return new Stmt.Var(name, initializer);
+  }
+
+  /**
+   * 
+   * @returns {Statement}
+   */
+  whileStatement () {
+    this.consume(TokenType.LEFT_PAREN, 'Expect \'(\' after \'while\'.');
+    const condition = this.expression();
+    this.consume(TokenType.RIGHT_PAREN, 'Expect \')\' after condition.');
+    const body = this.statement();
+    return new Stmt.While(condition, body);
   }
 
   /**

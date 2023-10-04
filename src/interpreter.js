@@ -15,6 +15,8 @@ class Interpreter {
     } catch (err) {
       if (err instanceof RuntimeError) {
         LoxError.runtimeError(err);
+      } else {
+        console.log(err);
       }
     }
   }
@@ -161,7 +163,7 @@ class Interpreter {
   visitIfStmt (stmt) {
     if (this.evaluate(stmt.condition)) {
       this.execute(stmt.thenBranch);
-    } else if (stmt.elseBranch !== null) {
+    } else if (stmt.elseBranch) {
       this.execute(stmt.elseBranch);
     }
   }
@@ -181,10 +183,21 @@ class Interpreter {
    */
   visitVarStmt (stmt) {
     let value = null;
-    if (stmt.initializer !== null) {
+    if (stmt.initializer) {
       value = this.evaluate(stmt.initializer);
     }
     this.environment.define(stmt.name.lexeme, value);
+  }
+
+  /**
+   * 
+   * @param {Statement.While} stmt 
+   */
+  visitWhileStmt (stmt) {
+    console.log(stmt.body);
+    while (this.evaluate(stmt.condition)) {
+      this.execute(stmt.body);
+    }
   }
 
   /**

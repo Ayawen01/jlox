@@ -16,7 +16,7 @@ class Environment {
       return this.values.get(name.lexeme);
     }
 
-    if (this.enclosing !== null) {
+    if (this.enclosing) {
       return this.enclosing.get(name);
     }
 
@@ -34,7 +34,7 @@ class Environment {
       return;
     }
 
-    if (this.enclosing !== null) {
+    if (this.enclosing) {
       this.enclosing.assign(name, value);
       return;
     }

@@ -1,0 +1,7 @@
+var state = true;
+var count = 0;
+while (state) {
+  print count;
+  if (count == 10000) state = false;
+  count = count + 1;
+}
