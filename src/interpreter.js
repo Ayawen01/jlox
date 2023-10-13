@@ -1,6 +1,7 @@
 import Environment from "./environment.js";
 import { LoxError, RuntimeError } from "./error.js";
 import TokenType from "./tokenType.js";
+import LoxCallable from "./loxCallable.js";
 
 class Interpreter {
   constructor() {
@@ -42,6 +43,29 @@ class Interpreter {
       case TokenType.SLASH: return left / right;
       case TokenType.STAR: return left * right;
     }
+  }
+
+  /**
+   * 
+   * @param {Expression.Call} expr 
+   * @returns {Object}
+   */
+  visitCallExpr(expr) {
+    const callee = this.evaluate(expr.callee);
+
+    const args = [];
+    for (const arg of expr.args) {
+      args.push(this.evaluate(arg));
+    }
+
+    if (!(callee instanceof LoxCallable)) {
+      throw new RuntimeError(expr.paren, 'Can only call functions and classes.');
+    }
+    const fun = callee;
+    if (args.length !== fun.arity()) {
+      throw new RuntimeError(expr.paren, `Expected ${fun.arity()}  arguments but got ${args.length}.`);
+    }
+    return fun.call(this, args);
   }
 
   /**
